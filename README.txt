@@ -15,4 +15,4 @@ Interesting features are:
 * It has a messaging system like IRC
 * Serverside JavaScript apps and HTTP clients can communicate
 
-Note that this is a work in progress.
+Note that this is a work in progress!
