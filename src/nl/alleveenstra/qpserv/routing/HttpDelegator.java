@@ -6,6 +6,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.alleveenstra.qpserv.filters.Chain;
+import nl.alleveenstra.qpserv.filters.Filter;
 import nl.alleveenstra.qpserv.httpd.HttpContext;
 import nl.alleveenstra.qpserv.httpd.HttpRequest;
 import nl.alleveenstra.qpserv.httpd.HttpResponse;
@@ -15,7 +17,7 @@ import nl.alleveenstra.qpserv.httpd.HttpResponse;
  *
  * @author alle.veenstra@gmail.com
  */
-public class HttpDelegator {
+public class HttpDelegator extends Filter {
 
     private static final String CONTROLLERPACKAGE = "nl.alleveenstra.qpserv.controllers";
     List<Object> all_handlers;
@@ -35,12 +37,12 @@ public class HttpDelegator {
     }
 
     /**
-     * Delegate a request.
+     * Process a request.
      *
      * @param request
      * @param response
      */
-    public void delegate(HttpContext context, HttpRequest request, HttpResponse response) {
+    public void process(Chain chain, HttpContext context, HttpRequest request, HttpResponse response) {
         for (Object handler : all_handlers) {
             Controller accepts = handler.getClass().getAnnotation(Controller.class);
             if (accepts != null && request.getUri().startsWith(accepts.prefix())) {
@@ -57,6 +59,7 @@ public class HttpDelegator {
                 }
             }
         }
+        chain.forward(context, request, response);
     }
 
     /**

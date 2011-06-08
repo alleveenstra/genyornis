@@ -4,8 +4,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import nl.alleveenstra.qpserv.QPserv;
+import nl.alleveenstra.qpserv.filters.Chain;
 import nl.alleveenstra.qpserv.javascript.ApplicationPool;
 import nl.alleveenstra.qpserv.routing.HttpDelegator;
+import nl.alleveenstra.qpserv.sessions.SessionManager;
 
 public class HttpWorker implements Runnable {
 	
@@ -51,9 +53,14 @@ public class HttpWorker implements Runnable {
             HttpContext context = new HttpContext(ApplicationPool.getInstance());
 			HttpRequest request = HttpRequest.build(dataEvent);
 			HttpResponse response = HttpResponse.build();
-			
-			// delegate the request
-			delegator.delegate(context, request, response);
+
+            Chain chain = new Chain();
+            chain.addFilter(delegator);
+            chain.addFilter(SessionManager.getInstance());
+
+			// set the chain in motion
+			chain.forward(context, request, response);
+
 			if (response.canSend())
 				sendResponse(request.getSocket(), response);
 		}
