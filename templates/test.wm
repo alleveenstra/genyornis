@@ -14,11 +14,25 @@
   <body>
 
   <table>
-    <tr><td>App name</td><td colspan="2">Actions</td></tr>
+    <tr>
+        <td>App name</td>
+        <td>Thread state</td>
+        <td>CPU usage</td>
+        <td>Penalty</td>
+        <td colspan="2">Actions</td>
+    </tr>
     #foreach ($app in $apps)
-      <tr><td>$app</td><td><a href="start?name=$app">Start</a></td><td><a href="stop?name=$app">Stop</a></td></tr>
+      <tr>
+        <td>$app.getName()</td>
+        <td>$app.getState()</td>
+        <td>$app.getCpuPerSecond()</td>
+        <td>$watchdog.getPenalty($app)</td>
+        <td><a href="start?name=$app.getId()">Start</a></td>
+        <td><a href="stop?name=$app.getId()">Stop</a></td></tr>
     #end
   </table>
+
+  <h3>Request no. is $requestCounter </h3>
 
   </body> 
 </html>

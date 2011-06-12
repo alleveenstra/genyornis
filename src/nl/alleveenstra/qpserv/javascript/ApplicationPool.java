@@ -1,10 +1,10 @@
 package nl.alleveenstra.qpserv.javascript;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
+import java.lang.management.ThreadMXBean;
+import java.util.*;
 
 /**
  * The application pool manages all JavaScript applications. It instantiates them in separate threads.
@@ -17,11 +17,14 @@ public class ApplicationPool {
     private static final String USER_DIR = "user.dir";
     private static ApplicationPool instance;
 
-    HashMap<String, Thread> apps;
+    private Map<String, Application> apps;
+    private WatchDog watchDog;
 
     private ApplicationPool() {
-        apps = new HashMap<String, Thread>();
+        apps = new HashMap<String, Application>();
         deployDirectory(System.getProperty(USER_DIR).concat(SCRIPTFOLDER));
+        watchDog = new WatchDog(this);
+        watchDog.start();
     }
 
     public static ApplicationPool getInstance() {
@@ -29,6 +32,10 @@ public class ApplicationPool {
             instance = new ApplicationPool();
         }
         return instance;
+    }
+
+    public WatchDog getWatchDog() {
+        return watchDog;
     }
 
     public void start(String appname) {
@@ -45,8 +52,17 @@ public class ApplicationPool {
         }
     }
 
-    public Set<String> list() {
-        return apps.keySet();
+    public Collection<Application> list() {
+        return apps.values();
+    }
+
+    public long getCPUTime(String applicationName) {
+        if (apps.containsKey(applicationName)) {
+            Application application = apps.get(applicationName);
+            application.updateCpuUsage();
+            return application.getCpuPerSecond();
+        }
+        return -1;
     }
 
     private void deployDirectory(String dirname) {
@@ -56,7 +72,7 @@ public class ApplicationPool {
             for (String file : files) {
                 if (!file.startsWith(".")) {
                     File script = new File(directory.getAbsolutePath().concat("/").concat(file));
-                    Thread app = new Thread(new Application(script));
+                    Application app = new Application(script);
                     apps.put(file.toString(), app);
                     app.start();
                 }

@@ -23,7 +23,7 @@ public class VelocityTemplate {
     }
 
     public void put(String name, Object value) {
-            velocityContext.put("apps", value);
+        velocityContext.put(name, value);
     }
 
     public void render(HttpResponse response) {
