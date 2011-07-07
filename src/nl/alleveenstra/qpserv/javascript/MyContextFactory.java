@@ -49,6 +49,8 @@ class MyFactory extends ContextFactory
          return super.hasFeature(cx, featureIndex);
      }
 
+
+
      @Override
      protected void observeInstructionCount(Context cx, int instructionCount)
      {

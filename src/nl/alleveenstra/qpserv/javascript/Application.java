@@ -41,6 +41,8 @@ public class Application extends Thread {
      */
     public void run() {
         cx = contextFactory.enterContext();
+        cx.setOptimizationLevel(-1);
+        cx.setMaximumInterpreterStackDepth(24);
         scope = cx.initStandardObjects();
 
         // make the communication channel available in the scope
@@ -69,6 +71,8 @@ public class Application extends Thread {
         } catch (IOException e) {
             // TODO implement some decent logging
             e.printStackTrace();
+        } catch(EvaluatorException e) {
+            // Lol exit!
         }
     }
 
@@ -98,6 +102,13 @@ public class Application extends Thread {
         String code = callback + "('" + from.replace("'", "\'") + "','" + message.replace("'", "\'") + "')";
         messages.add(code);
         notify();
+    }
+
+    public void updateMemoryUsage() {
+        Object[] ids = scope.getIds();
+        for (Object id : ids) {
+           // scope.get(id)
+        }
     }
 
     public void updateCpuUsage() {

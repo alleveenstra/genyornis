@@ -10,7 +10,7 @@ public class WatchDog extends Thread {
     public static final int INCREASE = 20;
     public static final double LEAKAGE = 0.1;
     public static final int INITIALIZATION = 0;
-    public static final int THRESHOLD = 100;
+    public static final int THRESHOLD = 1000;
     public static final int CPU_CYCLE_LIMIT = 10000;
 
     ApplicationPool applicationPool;
