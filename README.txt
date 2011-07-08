@@ -1,10 +1,10 @@
 This is a COMET style push HTTP server implemented in java. It works a bit 
 like NodeJS and ProjectAPE, as it has server side JavaScript scripts. The
 most interesting packages are:
-* nl.alleveenstra.qpserv.channels
-* nl.alleveenstra.qpserv.javascript
-* nl.alleveenstra.qpserv.routing
-* nl.alleveenstra.qpserv.controllers
+* nl.alleveenstra.genyornis.channels
+* nl.alleveenstra.genyornis.javascript
+* nl.alleveenstra.genyornis.routing
+* nl.alleveenstra.genyornis.controllers
 
 The nl.alleveenstra.qpserv.httpd package mostly contain source files that
 are not entirely written by me.
