@@ -6,6 +6,7 @@ import nl.alleveenstra.genyornis.httpd.HttpResponse;
 import nl.alleveenstra.genyornis.routing.Action;
 import nl.alleveenstra.genyornis.routing.Controller;
 import nl.alleveenstra.genyornis.routing.VelocityTemplate;
+import nl.alleveenstra.genyornis.sessions.Session;
 
 
 /**
@@ -22,6 +23,16 @@ public class Admin {
 	public void handle(HttpContext context, HttpRequest request, HttpResponse response) {
         VelocityTemplate template = new VelocityTemplate("templates/test.wm");
 
+        Integer requestCounter = new Integer(0);
+        if (request.getSession() != null)
+            requestCounter = request.getSession().getValue(Session.TYPES.REQUEST_COUNTER);
+        if (requestCounter == null)
+            requestCounter = new Integer(0);
+        requestCounter++;
+        if (request.getSession() != null)
+            request.getSession().setValues(Session.TYPES.REQUEST_COUNTER, requestCounter);
+
+        template.put("requestCounter", requestCounter);
 		template.put("apps", context.getPool().list());
         template.put("watchdog", context.getPool().getWatchDog());
 		template.render(response);

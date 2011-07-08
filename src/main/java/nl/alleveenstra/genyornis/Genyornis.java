@@ -28,12 +28,14 @@ public class Genyornis {
 
 
     public static void main(String[] args) {
+        String applicationFolder = "applications";
         if (args.length < 1) {
             System.out.println("Please provide the applications folder in the first argument.");
-            System.exit(-1);
+        } else {
+            applicationFolder = args[0];
         }
         LISTEN_PORT = Integer.parseInt(getSettings().getProperty("listen-port"));
-        applications().deployDirectory(args[0]);
+        applications().deployDirectory(applicationFolder);
         new Thread(Genyornis.worker()).start();
         new Thread(Genyornis.server()).start();
     }

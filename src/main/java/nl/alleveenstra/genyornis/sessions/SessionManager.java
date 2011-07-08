@@ -31,7 +31,6 @@ public class SessionManager extends Filter {
         return instance;
     }
 
-
     @Override
     public void process(Chain chain, HttpContext context, HttpRequest request, HttpResponse response) {
         Map<String, String> headers = request.getHeaders();
@@ -41,14 +40,16 @@ public class SessionManager extends Filter {
             Pattern pattern = Pattern.compile("sessid=([A-Za-z0-9]+)");
             Matcher matcher = pattern.matcher(cookieHeader);
             matcher.find();
-            if (matcher.groupCount() >= 2) {
+            try {
                 cookie = matcher.group(1);
+            } catch (Exception e) {
+                cookie = null;
             }
-        } else {
+        }
+        if (cookie == null) {
             cookie = new BigInteger(130, random).toString(32);
             response.getHeaders().put("Set-Cookie", "sessid=" + cookie);
-        }
-        if (cookie != null) {
+        } else {
             if (!sessions.containsKey(cookie))
                 sessions.put(cookie, new Session());
             request.setSession(sessions.get(cookie));
