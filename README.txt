@@ -16,3 +16,10 @@ Interesting features are:
 * Serverside JavaScript apps and HTTP clients can communicate
 
 Note that this is a work in progress!
+
+
+** Running the project **
+
+mvn clean install
+java -jar target/genyornis-0.01.00-jar-with-dependencies.jar applications/
+visit http://localhost:1337/

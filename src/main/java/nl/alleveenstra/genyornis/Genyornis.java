@@ -22,7 +22,11 @@ public class Genyornis {
 	private static ApplicationPool applications = null;
 	
 	public static void main(String[] args) {
-		applications();
+        if (args.length < 1) {
+            System.out.println("Please provide the applications folder in the first argument.");
+		    System.exit(-1);
+        }
+        applications().deployDirectory(args[0]);
 		new Thread(Genyornis.worker()).start();
 		new Thread(Genyornis.server()).start();
 	}

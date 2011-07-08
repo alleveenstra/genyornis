@@ -19,7 +19,6 @@ public class ApplicationPool {
 
     private ApplicationPool() {
         apps = new HashMap<String, Application>();
-        deployDirectory(System.getProperty(USER_DIR).concat(SCRIPTFOLDER));
         watchDog = new WatchDog(this);
         watchDog.start();
     }
@@ -62,7 +61,7 @@ public class ApplicationPool {
         return -1;
     }
 
-    private void deployDirectory(String dirname) {
+    public void deployDirectory(String dirname) {
         File directory = new File(dirname);
         if (directory.exists()) {
             String[] files = directory.list();
