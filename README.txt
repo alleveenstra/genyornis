@@ -6,7 +6,7 @@ most interesting packages are:
 * nl.alleveenstra.genyornis.routing
 * nl.alleveenstra.genyornis.controllers
 
-The nl.alleveenstra.qpserv.httpd package mostly contain source files that
+The nl.alleveenstra.genyornis.httpd package mostly contain source files that
 are not entirely written by me.
 
 Interesting features are:

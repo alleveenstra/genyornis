@@ -1,4 +1,4 @@
-import nl.alleveenstra.qpserv.httpd.HttpRequest;
+import nl.alleveenstra.genyornis.httpd.HttpRequest;
 
 public aspect LoggingAspect {
 	pointcut handlerCall(HttpRequest request) : execution (void handle(..)) && args(request, *);
