@@ -1,3 +1,10 @@
+                                         _     
+  __ _  ___ _ __  _   _  ___  _ __ _ __ (_)___ 
+ / _` |/ _ \ '_ \| | | |/ _ \| '__| '_ \| / __|
+| (_| |  __/ | | | |_| | (_) | |  | | | | \__ \
+ \__, |\___|_| |_|\__, |\___/|_|  |_| |_|_|___/
+ |___/            |___/                        
+
 This is a COMET style push HTTP server implemented in java. It works a bit 
 like NodeJS and ProjectAPE, as it has server side JavaScript scripts. The
 most interesting packages are:
