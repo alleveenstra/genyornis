@@ -1,7 +1,12 @@
 package nl.alleveenstra.genyornis.httpd;
 import java.nio.channels.SocketChannel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ChangeRequest {
+    private static final Logger log = LoggerFactory.getLogger(ChangeRequest.class);
+
 	public static final int REGISTER = 1;
 	public static final int CHANGEOPS = 2;
 	

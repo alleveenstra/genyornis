@@ -3,6 +3,9 @@ import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.alleveenstra.genyornis.Genyornis;
 import nl.alleveenstra.genyornis.filters.Chain;
 import nl.alleveenstra.genyornis.javascript.ApplicationPool;
@@ -10,6 +13,8 @@ import nl.alleveenstra.genyornis.routing.HttpDelegator;
 import nl.alleveenstra.genyornis.sessions.SessionManager;
 
 public class HttpWorker implements Runnable {
+
+    private static final Logger log = LoggerFactory.getLogger(HttpWorker.class);
 	
 	HttpDelegator delegator = new HttpDelegator();
 

@@ -4,9 +4,11 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.alleveenstra.genyornis.controllers.Admin;
 import nl.alleveenstra.genyornis.controllers.Channel;
-import nl.alleveenstra.genyornis.controllers.Demo;
 import nl.alleveenstra.genyornis.controllers.Static;
 import nl.alleveenstra.genyornis.filters.Chain;
 import nl.alleveenstra.genyornis.filters.Filter;
@@ -20,6 +22,7 @@ import nl.alleveenstra.genyornis.httpd.HttpResponse;
  * @author alle.veenstra@gmail.com
  */
 public class HttpDelegator extends Filter {
+    private static final Logger log = LoggerFactory.getLogger(HttpDelegator.class);
 
     private static final String CONTROLLERPACKAGE = "nl.alleveenstra.genyornis.controllers";
     List<Object> all_handlers;
@@ -77,7 +80,6 @@ public class HttpDelegator extends Filter {
         // TODO: use guice reflection annotation scanner
         classes.add(Admin.class);
         classes.add(Channel.class);
-        classes.add(Demo.class);
         classes.add(Static.class);
 
         Class[] classesA = new Class[classes.size()];

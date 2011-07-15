@@ -11,11 +11,14 @@ import nl.alleveenstra.genyornis.httpd.HttpResponse;
 import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.RuntimeSingleton;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author alle.veenstra@gmail.com
  */
 public class VelocityTemplate {
+    private static final Logger log = LoggerFactory.getLogger(VelocityTemplate.class);
 
     private Template template;
     private Context velocityContext;

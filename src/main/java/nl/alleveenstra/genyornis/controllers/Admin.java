@@ -1,5 +1,8 @@
 package nl.alleveenstra.genyornis.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.alleveenstra.genyornis.httpd.HttpContext;
 import nl.alleveenstra.genyornis.httpd.HttpRequest;
 import nl.alleveenstra.genyornis.httpd.HttpResponse;
@@ -18,6 +21,7 @@ import nl.alleveenstra.genyornis.sessions.Session;
  */
 @Controller(prefix = "/admin/")
 public class Admin {
+    private static final Logger log = LoggerFactory.getLogger(Admin.class);
 
     @Action(regex = ".*")
 	public void handle(HttpContext context, HttpRequest request, HttpResponse response) {

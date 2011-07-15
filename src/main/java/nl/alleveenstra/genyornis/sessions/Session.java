@@ -3,10 +3,15 @@ package nl.alleveenstra.genyornis.sessions;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author alle.veenstra@gmail.com
  */
 public class Session {
+    private static final Logger log = LoggerFactory.getLogger(Session.class);
+
     public static enum TYPES {
         REQUEST_COUNTER
     }

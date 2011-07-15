@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.alleveenstra.genyornis.javascript.Application;
 
 /**
@@ -13,6 +16,8 @@ import nl.alleveenstra.genyornis.javascript.Application;
  * @author alle.veenstra@gmail.com
  */
 public class ChannelManager {
+    private static final Logger log = LoggerFactory.getLogger(ChannelManager.class);
+
 	HashMap<String, Set<ChannelHook>> channels = new HashMap<String, Set<ChannelHook>>();
 	
 	private static ChannelManager instance = null;

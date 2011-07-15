@@ -3,12 +3,16 @@ package nl.alleveenstra.genyornis.javascript;
 import java.io.File;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The application pool manages all JavaScript applications. It instantiates them in separate threads.
  *
  * @author alle.veenstra@gmail.com
  */
 public class ApplicationPool {
+    private static final Logger log = LoggerFactory.getLogger(ApplicationPool.class);
 
     private static final String SCRIPTFOLDER = "/javascripts";
     private static final String USER_DIR = "user.dir";

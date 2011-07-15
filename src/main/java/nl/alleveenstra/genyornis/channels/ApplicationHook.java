@@ -3,6 +3,9 @@ package nl.alleveenstra.genyornis.channels;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.alleveenstra.genyornis.javascript.Application;
 
 /**
@@ -12,6 +15,7 @@ import nl.alleveenstra.genyornis.javascript.Application;
  * @author alle.veenstra@gmail.com
  */
 public class ApplicationHook extends ChannelHook {
+    private static final Logger log = LoggerFactory.getLogger(ApplicationHook.class);
 
   private static Map<String, ApplicationHook> instances = new HashMap<String, ApplicationHook>();
   Application                                 app;

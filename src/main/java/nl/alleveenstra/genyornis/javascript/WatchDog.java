@@ -3,10 +3,15 @@ package nl.alleveenstra.genyornis.javascript;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author alle.veenstra@gmail.com
  */
 public class WatchDog extends Thread {
+    private static final Logger log = LoggerFactory.getLogger(WatchDog.class);
+
     public static final int INCREASE = 20;
     public static final double LEAKAGE = 0.1;
     public static final int INITIALIZATION = 0;

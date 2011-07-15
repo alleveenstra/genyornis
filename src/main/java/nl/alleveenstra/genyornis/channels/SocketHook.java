@@ -4,6 +4,9 @@ import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.alleveenstra.genyornis.Genyornis;
 import nl.alleveenstra.genyornis.httpd.HttpResponse;
 
@@ -14,6 +17,7 @@ import nl.alleveenstra.genyornis.httpd.HttpResponse;
  * @author alle.veenstra@gmail.com
  */
 public class SocketHook extends ChannelHook {
+    private static final Logger log = LoggerFactory.getLogger(SocketHook.class);
 
   private static Map<SocketChannel, SocketHook> instances = new HashMap<SocketChannel, SocketHook>();
   SocketChannel                                 socket;

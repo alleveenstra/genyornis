@@ -1,5 +1,8 @@
 package nl.alleveenstra.genyornis.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.alleveenstra.genyornis.Genyornis;
 import nl.alleveenstra.genyornis.channels.ChannelManager;
 import nl.alleveenstra.genyornis.httpd.HttpContext;
@@ -16,6 +19,7 @@ import nl.alleveenstra.genyornis.routing.Controller;
  */
 @Controller(prefix = "/channel/")
 public class Channel {
+    private static final Logger log = LoggerFactory.getLogger(Channel.class);
 
   private static final String MESSAGE         = "msg";
   private static final String NAME            = "name";

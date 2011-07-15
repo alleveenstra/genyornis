@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 
+import nl.alleveenstra.genyornis.Genyornis;
 import nl.alleveenstra.genyornis.httpd.HttpContext;
 import nl.alleveenstra.genyornis.httpd.HttpRequest;
 import nl.alleveenstra.genyornis.httpd.HttpResponse;
@@ -24,7 +25,6 @@ public class Static {
     private static final String INVALID_PATH_MESSAGE = "false";
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String READ_ERROR = "Error reading file";
-    private static final String USER_DIR = "user.dir";
     private static final String SERVE_FROM = "/static";
     private static final String PREFIX = "/static/";
 
@@ -40,7 +40,7 @@ public class Static {
      * @return the current working directory
      */
     private String getCWD() {
-        return System.getProperty(USER_DIR).concat(SERVE_FROM);
+        return Genyornis.getApplicationFolder() + SERVE_FROM;
     }
 
     /**

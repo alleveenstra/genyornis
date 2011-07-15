@@ -2,12 +2,16 @@ package nl.alleveenstra.genyornis.javascript;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author alle.veenstra@gmail.com
  */
 class MyFactory extends ContextFactory
  {
+     private static final Logger log = LoggerFactory.getLogger(MyFactory.class);
+
      private boolean running = true;
 
      private static class MyContext extends Context

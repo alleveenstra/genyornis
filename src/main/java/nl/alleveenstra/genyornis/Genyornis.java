@@ -1,11 +1,13 @@
 package nl.alleveenstra.genyornis;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.util.Properties;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import nl.alleveenstra.genyornis.channels.ChannelManager;
 import nl.alleveenstra.genyornis.httpd.HttpWorker;
@@ -19,6 +21,8 @@ import nl.alleveenstra.genyornis.javascript.ApplicationPool;
  * @author alle.veenstra@gmail.com
  */
 public class Genyornis {
+    private static final Logger log = LoggerFactory.getLogger(Genyornis.class);
+
     private static InetAddress LISTEN_HOST = null;
     private static int LISTEN_PORT = 8080;
 
@@ -26,18 +30,23 @@ public class Genyornis {
     private static NioServer server = null;
     private static ApplicationPool applications = null;
 
+    private static String applicationFolder = null;
+    public static final String LISTEN_PORT_SETTING = "listen-port";
+    public static final String WEBDATA_FOLDER_SETTING = "webdata-folder";
+    public static final String APPS_FOLDER = "/apps/";
+
 
     public static void main(String[] args) {
-        String applicationFolder = "applications";
-        if (args.length < 1) {
-            System.out.println("Please provide the applications folder in the first argument.");
+        if (getSettings().contains(WEBDATA_FOLDER_SETTING)) {
+            applicationFolder = getSettings().getProperty(WEBDATA_FOLDER_SETTING);
         } else {
-            applicationFolder = args[0];
+            applicationFolder = System.getProperty("user.dir") + "/webdata";
         }
-        LISTEN_PORT = Integer.parseInt(getSettings().getProperty("listen-port"));
-        applications().deployDirectory(applicationFolder);
+        LISTEN_PORT = Integer.parseInt(getSettings().getProperty(LISTEN_PORT_SETTING));
+        applications().deployDirectory(applicationFolder + APPS_FOLDER);
         new Thread(Genyornis.worker()).start();
         new Thread(Genyornis.server()).start();
+        log.info("Application started");
     }
 
     /**
@@ -82,12 +91,11 @@ public class Genyornis {
         return ChannelManager.getInstance();
     }
 
-    private static Properties getSettings() {
-        //-------------------------------------------------
-        Properties myProps = new Properties();
+    public static Properties getSettings() {
+        Properties properties = new Properties();
         try {
             InputStream settingsFile = Thread.currentThread().getContextClassLoader().getResourceAsStream("settings.properties");
-            myProps.load(settingsFile);
+            properties.load(settingsFile);
         } catch (FileNotFoundException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (IOException e) {
@@ -95,7 +103,14 @@ public class Genyornis {
         } finally {
 
         }
+        return properties;
+    }
 
-        return myProps;
+    public static String getApplicationFolder() {
+        return applicationFolder;
+    }
+
+    public static void setApplicationFolder(final String applicationFolder) {
+        Genyornis.applicationFolder = applicationFolder;
     }
 }

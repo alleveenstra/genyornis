@@ -4,7 +4,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class HttpResponse {
+    private static final Logger log = LoggerFactory.getLogger(HttpResponse.class);
 	private static final String DEFAULT_MESSAGE = "qp<sup>2</sup> HTTPd";
 	
   boolean canSend = true;

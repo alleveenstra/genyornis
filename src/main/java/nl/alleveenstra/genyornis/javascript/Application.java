@@ -12,6 +12,8 @@ import java.util.Vector;
 import nl.alleveenstra.genyornis.Genyornis;
 
 import org.mozilla.javascript.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class represents a JavaScript application.
@@ -19,6 +21,8 @@ import org.mozilla.javascript.*;
  * @author alle.veenstra@gmail.com
  */
 public class Application extends Thread {
+    private static final Logger log = LoggerFactory.getLogger(Application.class);
+
     private static final int EVALUATE_TIMEOUT = 100;
     private Context cx;
     MyFactory contextFactory = new MyFactory();

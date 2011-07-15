@@ -14,10 +14,14 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.alleveenstra.genyornis.Genyornis;
 import nl.alleveenstra.genyornis.channels.SocketHook;
 
 public class NioServer implements Runnable {
+    private static final Logger log = LoggerFactory.getLogger(NioServer.class);
   // The host:port combination to listen on
   private InetAddress                          hostAddress;
   private int                                  port;

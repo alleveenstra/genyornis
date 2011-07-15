@@ -13,10 +13,14 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author alle.veenstra@gmail.com
  */
 public class SessionManager extends Filter {
+    private static final Logger log = LoggerFactory.getLogger(SessionManager.class);
 
     private static SessionManager instance;
     private SecureRandom random = new SecureRandom();
