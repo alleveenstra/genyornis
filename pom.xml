@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.alleveenstra.genyornis</groupId>
     <artifactId>genyornis</artifactId>
-    <version>0.01.00</version>
+    <version>0.01.01-SNAPSHOT</version>
 
     <dependencies>
 
