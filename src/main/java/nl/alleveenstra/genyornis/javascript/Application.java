@@ -10,6 +10,7 @@ import java.lang.management.ThreadMXBean;
 import java.util.Vector;
 
 import nl.alleveenstra.genyornis.Genyornis;
+import nl.alleveenstra.genyornis.ServerContext;
 
 import org.mozilla.javascript.*;
 import org.slf4j.Logger;
@@ -35,8 +36,10 @@ public class Application extends Thread {
     private long lastThreadCpuTime = 0;
 
     private boolean running = true;
+    private ServerContext context;
 
-    public Application(File javascript) {
+    public Application(ServerContext context, File javascript) {
+        this.context = context;
         this.javascript = javascript;
     }
 
@@ -50,7 +53,7 @@ public class Application extends Thread {
         scope = cx.initStandardObjects();
 
         // make the communication channel available in the scope
-        java.lang.Object wrappedPipe = Context.javaToJS(Genyornis.channelManager(), scope);
+        java.lang.Object wrappedPipe = Context.javaToJS(context.channelManager(), scope);
         ScriptableObject.putProperty(scope, "pipe", wrappedPipe);
 
         // make this application available in this scope

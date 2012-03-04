@@ -7,8 +7,7 @@ import java.io.IOException;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 
-import nl.alleveenstra.genyornis.Genyornis;
-import nl.alleveenstra.genyornis.httpd.HttpContext;
+import nl.alleveenstra.genyornis.ServerContext;
 import nl.alleveenstra.genyornis.httpd.HttpRequest;
 import nl.alleveenstra.genyornis.httpd.HttpResponse;
 import nl.alleveenstra.genyornis.routing.Action;
@@ -30,8 +29,8 @@ public class Static {
 
 
     @Action(regex = ".*")
-    public void handle(HttpContext context, HttpRequest request, HttpResponse response) {
-        response.setContent(dirlist(request.getUri().replaceFirst(PREFIX, "/"), response));
+    public void handle(ServerContext context, HttpRequest request, HttpResponse response) {
+        response.setContent(dirlist(context, request.getUri().replaceFirst(PREFIX, "/"), response));
     }
 
     /**
@@ -39,8 +38,8 @@ public class Static {
      *
      * @return the current working directory
      */
-    private String getCWD() {
-        return Genyornis.getApplicationFolder() + SERVE_FROM;
+    private String getCWD(ServerContext context) {
+        return context.getApplicationFolder() + SERVE_FROM;
     }
 
     /**
@@ -51,9 +50,9 @@ public class Static {
      * @param response
      * @return the content or a listing
      */
-    private byte[] dirlist(String path, HttpResponse response) {
+    private byte[] dirlist(ServerContext context, String path, HttpResponse response) {
         path.replaceAll("\\.\\.", "");
-        java.io.File dir = new java.io.File(getCWD() + path);
+        java.io.File dir = new java.io.File(getCWD(context) + path);
         String[] chld = dir.list();
         if (dir.isFile()) {
             return serveFile(dir, response);

@@ -3,7 +3,7 @@ package nl.alleveenstra.genyornis.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nl.alleveenstra.genyornis.httpd.HttpContext;
+import nl.alleveenstra.genyornis.ServerContext;
 import nl.alleveenstra.genyornis.httpd.HttpRequest;
 import nl.alleveenstra.genyornis.httpd.HttpResponse;
 import nl.alleveenstra.genyornis.routing.Action;
@@ -24,8 +24,8 @@ public class Admin {
     private static final Logger log = LoggerFactory.getLogger(Admin.class);
 
     @Action(regex = ".*")
-	public void handle(HttpContext context, HttpRequest request, HttpResponse response) {
-        VelocityTemplate template = new VelocityTemplate("templates/test.wm");
+	public void handle(ServerContext context, HttpRequest request, HttpResponse response) {
+        VelocityTemplate template = new VelocityTemplate("templates/admin.wm");
 
         Integer requestCounter = new Integer(0);
         if (request.getSession() != null)
@@ -36,9 +36,10 @@ public class Admin {
         if (request.getSession() != null)
             request.getSession().setValues(Session.TYPES.REQUEST_COUNTER, requestCounter);
 
+        template.put("title", "Genyornis administration");
         template.put("requestCounter", requestCounter);
-		template.put("apps", context.getPool().list());
-        template.put("watchdog", context.getPool().getWatchDog());
+		template.put("apps", context.applications().list());
+        template.put("watchdog", context.applications().getWatchDog());
 		template.render(response);
 	}
 }

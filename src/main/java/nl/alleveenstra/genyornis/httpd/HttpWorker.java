@@ -1,4 +1,5 @@
 package nl.alleveenstra.genyornis.httpd;
+
 import java.nio.channels.SocketChannel;
 import java.util.LinkedList;
 import java.util.List;
@@ -6,21 +7,23 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nl.alleveenstra.genyornis.Genyornis;
+import nl.alleveenstra.genyornis.ServerContext;
 import nl.alleveenstra.genyornis.filters.Chain;
-import nl.alleveenstra.genyornis.javascript.ApplicationPool;
+import nl.alleveenstra.genyornis.filters.Filter;
 import nl.alleveenstra.genyornis.routing.HttpDelegator;
 import nl.alleveenstra.genyornis.sessions.SessionManager;
 
 public class HttpWorker implements Runnable {
 
     private static final Logger log = LoggerFactory.getLogger(HttpWorker.class);
-	
-	HttpDelegator delegator = new HttpDelegator();
 
-	public static final String HTTP_OK = "200 OK",
+    Filter delegator = new HttpDelegator();
+
+	public static final String
+            HTTP_OK = "200 OK",
 			HTTP_REDIRECT = "301 Moved Permanently",
-			HTTP_FORBIDDEN = "403 Forbidden", HTTP_NOTFOUND = "404 Not Found",
+			HTTP_FORBIDDEN = "403 Forbidden",
+            HTTP_NOTFOUND = "404 Not Found",
 			HTTP_BADREQUEST = "400 Bad Request",
 			HTTP_INTERNALERROR = "500 Internal Server Error",
 			HTTP_NOTIMPLEMENTED = "501 Not Implemented";
@@ -30,9 +33,13 @@ public class HttpWorker implements Runnable {
 			MIME_DEFAULT_BINARY = "application/octet-stream";
 
 	private List<ServerDataEvent> queue = new LinkedList<ServerDataEvent>();
+    private ServerContext context;
 
-	public void processData(NioServer server, SocketChannel socket,
-			char[] data, int count) {
+    public HttpWorker(final ServerContext context) {
+        this.context = context;
+    }
+
+    public void processData(NioServer server, SocketChannel socket, char[] data, int count) {
 		char[] dataCopy = new char[count];
 		System.arraycopy(data, 0, dataCopy, 0, count);
 		synchronized (queue) {
@@ -53,9 +60,8 @@ public class HttpWorker implements Runnable {
 					} catch (InterruptedException e) {
 					}
 				}
-				dataEvent = (ServerDataEvent) queue.remove(0);
+				dataEvent = queue.remove(0);
 			}
-            HttpContext context = new HttpContext(ApplicationPool.getInstance());
 			HttpRequest request = HttpRequest.build(dataEvent);
 			HttpResponse response = HttpResponse.build();
 
@@ -66,12 +72,13 @@ public class HttpWorker implements Runnable {
 			// set the chain in motion
 			chain.forward(context, request, response);
 
-			if (response.canSend())
+			if (response.canSend()) {
 				sendResponse(request.getSocket(), response);
+            }
 		}
 	}
 	
 	public void sendResponse(SocketChannel socket, HttpResponse response) {
-		Genyornis.server().send(socket, response.render());
+        context.server().send(socket, response.render());
 	}
 }

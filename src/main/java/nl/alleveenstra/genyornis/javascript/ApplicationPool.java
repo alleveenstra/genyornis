@@ -6,6 +6,8 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import nl.alleveenstra.genyornis.ServerContext;
+
 /**
  * The application pool manages all JavaScript applications. It instantiates them in separate threads.
  *
@@ -20,16 +22,18 @@ public class ApplicationPool {
 
     private Map<String, Application> apps;
     private WatchDog watchDog;
+    private ServerContext context;
 
-    private ApplicationPool() {
+    private ApplicationPool(ServerContext context) {
+        this.context = context;
         apps = new HashMap<String, Application>();
         watchDog = new WatchDog(this);
         watchDog.start();
     }
 
-    public static ApplicationPool getInstance() {
+    public static ApplicationPool getInstance(ServerContext context) {
         if (instance == null) {
-            instance = new ApplicationPool();
+            instance = new ApplicationPool(context);
         }
         return instance;
     }
@@ -72,7 +76,7 @@ public class ApplicationPool {
             for (String file : files) {
                 if (!file.startsWith(".")) {
                     File script = new File(directory.getAbsolutePath().concat("/").concat(file));
-                    Application app = new Application(script);
+                    Application app = new Application(context, script);
                     apps.put(file.toString(), app);
                     app.start();
                 }

@@ -1,6 +1,6 @@
 package nl.alleveenstra.genyornis.filters;
 
-import nl.alleveenstra.genyornis.httpd.HttpContext;
+import nl.alleveenstra.genyornis.ServerContext;
 import nl.alleveenstra.genyornis.httpd.HttpRequest;
 import nl.alleveenstra.genyornis.httpd.HttpResponse;
 
@@ -20,11 +20,12 @@ public class Chain {
         filters.push(filter);
     }
 
-    public void forward(HttpContext context, HttpRequest request, HttpResponse response) {
+    public void forward(ServerContext context, HttpRequest request, HttpResponse response) {
         if (!filters.empty()) {
             Filter next = filters.pop();
-            if (next != null)
+            if (next != null) {
                 next.process(this, context, request, response);
+            }
         }
     }
 }

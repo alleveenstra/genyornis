@@ -7,12 +7,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import nl.alleveenstra.genyornis.ServerContext;
 import nl.alleveenstra.genyornis.controllers.Admin;
 import nl.alleveenstra.genyornis.controllers.Channel;
 import nl.alleveenstra.genyornis.controllers.Static;
 import nl.alleveenstra.genyornis.filters.Chain;
 import nl.alleveenstra.genyornis.filters.Filter;
-import nl.alleveenstra.genyornis.httpd.HttpContext;
 import nl.alleveenstra.genyornis.httpd.HttpRequest;
 import nl.alleveenstra.genyornis.httpd.HttpResponse;
 
@@ -47,7 +47,7 @@ public class HttpDelegator extends Filter {
      * @param request
      * @param response
      */
-    public void process(Chain chain, HttpContext context, HttpRequest request, HttpResponse response) {
+    public void process(Chain chain, ServerContext context, HttpRequest request, HttpResponse response) {
         for (Object handler : all_handlers) {
             Controller accepts = handler.getClass().getAnnotation(Controller.class);
             if (accepts != null && request.getUri().startsWith(accepts.prefix())) {

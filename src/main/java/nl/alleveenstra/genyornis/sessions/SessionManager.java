@@ -1,8 +1,8 @@
 package nl.alleveenstra.genyornis.sessions;
 
+import nl.alleveenstra.genyornis.ServerContext;
 import nl.alleveenstra.genyornis.filters.Chain;
 import nl.alleveenstra.genyornis.filters.Filter;
-import nl.alleveenstra.genyornis.httpd.HttpContext;
 import nl.alleveenstra.genyornis.httpd.HttpRequest;
 import nl.alleveenstra.genyornis.httpd.HttpResponse;
 
@@ -26,8 +26,7 @@ public class SessionManager extends Filter {
     private SecureRandom random = new SecureRandom();
     private Map<String, Session> sessions = new HashMap<String, Session>();
 
-    private SessionManager() {
-    }
+    private SessionManager() {}
 
     public static SessionManager getInstance() {
         if (instance == null)
@@ -36,7 +35,7 @@ public class SessionManager extends Filter {
     }
 
     @Override
-    public void process(Chain chain, HttpContext context, HttpRequest request, HttpResponse response) {
+    public void process(Chain chain, ServerContext context, HttpRequest request, HttpResponse response) {
         Map<String, String> headers = request.getHeaders();
         String cookie = null;
         if (headers.containsKey("cookie")) {

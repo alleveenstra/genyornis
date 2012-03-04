@@ -3,9 +3,7 @@ package nl.alleveenstra.genyornis.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nl.alleveenstra.genyornis.Genyornis;
-import nl.alleveenstra.genyornis.channels.ChannelManager;
-import nl.alleveenstra.genyornis.httpd.HttpContext;
+import nl.alleveenstra.genyornis.ServerContext;
 import nl.alleveenstra.genyornis.httpd.HttpRequest;
 import nl.alleveenstra.genyornis.httpd.HttpResponse;
 import nl.alleveenstra.genyornis.routing.Action;
@@ -32,9 +30,9 @@ public class Channel {
    * @param response
    */
   @Action(regex = "message")
-  public void handle_message(HttpContext context, HttpRequest request, HttpResponse response) {
+  public void handle_message(ServerContext context, HttpRequest request, HttpResponse response) {
     if (request.getParameters().containsKey(NAME) && request.getParameters().containsKey(MESSAGE)) {
-      Genyornis.channelManager().send((String) request.getParameters().get(NAME), (String) request.getParameters().get(MESSAGE));
+      context.channelManager().send((String) request.getParameters().get(NAME), (String) request.getParameters().get(MESSAGE));
     }
   }
 
@@ -46,9 +44,10 @@ public class Channel {
    * @param response
    */
   @Action(regex = "listen")
-  public void handle_listen(HttpContext context, HttpRequest request, HttpResponse response) {
-    if (request.getParameters().containsKey(NAME))
-      ChannelManager.getInstance().join(request.getParameters().get(NAME), request.getSocket());
+  public void handle_listen(ServerContext context, HttpRequest request, HttpResponse response) {
+    if (request.getParameters().containsKey(NAME)) {
+        context.channelManager().join(request.getParameters().get(NAME), request.getSocket());
+    }
     response.setSend(false);
   }
 
@@ -60,9 +59,9 @@ public class Channel {
    * @param response
    */
   @Action(regex = "list")
-  public void handle_list(HttpContext context, HttpRequest request, HttpResponse response) {
+  public void handle_list(ServerContext context, HttpRequest request, HttpResponse response) {
     String content = "<ul>";
-    for (String pipe : ChannelManager.getInstance().list())
+    for (String pipe : context.channelManager().list())
       content += "<li>" + pipe + "</li>";
     content += "</ul>";
     response.setContent(content.getBytes());
