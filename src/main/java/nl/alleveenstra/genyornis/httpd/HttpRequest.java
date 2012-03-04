@@ -1,7 +1,5 @@
 package nl.alleveenstra.genyornis.httpd;
 
-import nl.alleveenstra.genyornis.sessions.Session;
-
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +7,8 @@ import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import nl.alleveenstra.genyornis.sessions.Session;
 
 public class HttpRequest {
     private static final Logger log = LoggerFactory.getLogger(HttpRequest.class);
@@ -32,8 +32,9 @@ public class HttpRequest {
 
         // Read the request line
         String inLine = in.nextToken();
-        if (inLine == null)
+        if (inLine == null) {
             return request;
+        }
         StringTokenizer st = new StringTokenizer(inLine);
 
         // if ( !st.hasMoreTokens())
@@ -53,8 +54,9 @@ public class HttpRequest {
         if (qmi >= 0) {
             decodeParms(request.uri.substring(qmi + 1), request.parameters);
             request.uri = decodePercent(request.uri.substring(0, qmi));
-        } else
+        } else {
             request.uri = decodePercent(request.uri);
+        }
 
         // If there's another token, it's protocol version,
         // followed by HTTP headers. Ignore version but parse headers.
@@ -73,16 +75,18 @@ public class HttpRequest {
     }
 
     private static void decodeParms(String parms, Map<String, String> p) {
-        if (parms == null)
+        if (parms == null) {
             return;
+        }
 
         StringTokenizer st = new StringTokenizer(parms, "&");
         while (st.hasMoreTokens()) {
             String e = st.nextToken();
             int sep = e.indexOf('=');
-            if (sep >= 0)
+            if (sep >= 0) {
                 p.put(decodePercent(e.substring(0, sep)).trim(),
                         decodePercent(e.substring(sep + 1)));
+            }
         }
     }
 

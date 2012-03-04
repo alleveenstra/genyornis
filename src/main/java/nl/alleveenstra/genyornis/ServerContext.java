@@ -9,8 +9,12 @@ import nl.alleveenstra.genyornis.javascript.ApplicationPool;
  */
 public interface ServerContext {
     NioServer server();
+
     HttpWorker worker();
+
     ChannelManager channelManager();
+
     String getApplicationFolder();
+
     ApplicationPool applications();
 }

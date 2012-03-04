@@ -19,8 +19,9 @@ public class Session {
     private Map<TYPES, Object> values = new HashMap<TYPES, Object>();
 
     public <T> T getValue(TYPES type) {
-        if (values.containsKey(type))
-           return (T) values.get(type);
+        if (values.containsKey(type)) {
+            return (T) values.get(type);
+        }
         return null;
     }
 

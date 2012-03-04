@@ -9,12 +9,14 @@ import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadMXBean;
 import java.util.Vector;
 
-import nl.alleveenstra.genyornis.Genyornis;
-import nl.alleveenstra.genyornis.ServerContext;
-
-import org.mozilla.javascript.*;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.EvaluatorException;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import nl.alleveenstra.genyornis.ServerContext;
 
 /**
  * This class represents a JavaScript application.
@@ -78,7 +80,7 @@ public class Application extends Thread {
         } catch (IOException e) {
             // TODO implement some decent logging
             e.printStackTrace();
-        } catch(EvaluatorException e) {
+        } catch (EvaluatorException e) {
             // Lol exit!
         }
     }
@@ -91,8 +93,9 @@ public class Application extends Thread {
      */
     public synchronized String getMessage() throws InterruptedException {
         notify();
-        while (messages.size() == 0)
+        while (messages.size() == 0) {
             wait();
+        }
         String message = (String) messages.firstElement();
         messages.removeElement(message);
         return message;
@@ -114,7 +117,7 @@ public class Application extends Thread {
     public void updateMemoryUsage() {
         Object[] ids = scope.getIds();
         for (Object id : ids) {
-           // scope.get(id)
+            // scope.get(id)
         }
     }
 

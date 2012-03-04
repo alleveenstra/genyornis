@@ -1,10 +1,10 @@
 package nl.alleveenstra.genyornis.filters;
 
+import java.util.Stack;
+
 import nl.alleveenstra.genyornis.ServerContext;
 import nl.alleveenstra.genyornis.httpd.HttpRequest;
 import nl.alleveenstra.genyornis.httpd.HttpResponse;
-
-import java.util.Stack;
 
 /**
  * @author alle.veenstra@gmail.com

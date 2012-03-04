@@ -1,11 +1,5 @@
 package nl.alleveenstra.genyornis.sessions;
 
-import nl.alleveenstra.genyornis.ServerContext;
-import nl.alleveenstra.genyornis.filters.Chain;
-import nl.alleveenstra.genyornis.filters.Filter;
-import nl.alleveenstra.genyornis.httpd.HttpRequest;
-import nl.alleveenstra.genyornis.httpd.HttpResponse;
-
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.HashMap;
@@ -15,6 +9,12 @@ import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import nl.alleveenstra.genyornis.ServerContext;
+import nl.alleveenstra.genyornis.filters.Chain;
+import nl.alleveenstra.genyornis.filters.Filter;
+import nl.alleveenstra.genyornis.httpd.HttpRequest;
+import nl.alleveenstra.genyornis.httpd.HttpResponse;
 
 /**
  * @author alle.veenstra@gmail.com
@@ -26,11 +26,13 @@ public class SessionManager extends Filter {
     private SecureRandom random = new SecureRandom();
     private Map<String, Session> sessions = new HashMap<String, Session>();
 
-    private SessionManager() {}
+    private SessionManager() {
+    }
 
     public static SessionManager getInstance() {
-        if (instance == null)
+        if (instance == null) {
             instance = new SessionManager();
+        }
         return instance;
     }
 
@@ -53,8 +55,9 @@ public class SessionManager extends Filter {
             cookie = new BigInteger(130, random).toString(32);
             response.getHeaders().put("Set-Cookie", "sessid=" + cookie);
         } else {
-            if (!sessions.containsKey(cookie))
+            if (!sessions.containsKey(cookie)) {
                 sessions.put(cookie, new Session());
+            }
             request.setSession(sessions.get(cookie));
         }
         chain.forward(context, request, response);

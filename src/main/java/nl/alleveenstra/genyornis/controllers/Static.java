@@ -43,8 +43,8 @@ public class Static {
     }
 
     /**
-     * Resolve the requested path. In case this path points to a directory, it will be listed. In case the path points to
-     * a file, its content will be returned.
+     * Resolve the requested path. In case this path points to a directory, it will be listed. In case the path points
+     * to a file, its content will be returned.
      *
      * @param path
      * @param response

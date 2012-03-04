@@ -31,8 +31,9 @@ public class WatchDog extends Thread {
             try {
                 for (Application application : applicationPool.list()) {
                     application.updateCpuUsage();
-                    if (application.getCpuPerSecond() > CPU_CYCLE_LIMIT)
+                    if (application.getCpuPerSecond() > CPU_CYCLE_LIMIT) {
                         increasePenalty(application);
+                    }
                     if (isPunishable(application)) {
                         application.stop();
                     }
@@ -50,14 +51,15 @@ public class WatchDog extends Thread {
     }
 
     public int getPenalty(Application application) {
-        if (!penalties.containsKey(application))
+        if (!penalties.containsKey(application)) {
             penalties.put(application, INITIALIZATION);
+        }
         return penalties.get(application);
     }
 
     private void leakPenalty(Application application) {
         int penalty = getPenalty(application);
-        penalties.put(application, penalty - (int)(penalty * LEAKAGE));
+        penalties.put(application, penalty - (int) (penalty * LEAKAGE));
     }
 
     private void increasePenalty(Application application) {

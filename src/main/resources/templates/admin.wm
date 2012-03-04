@@ -18,7 +18,6 @@
         <td>App name</td>
         <td>Thread state</td>
         <td>CPU usage</td>
-        <td>Penalty</td>
         <td colspan="2">Actions</td>
     </tr>
     #foreach ($app in $apps)
@@ -26,7 +25,6 @@
         <td>$app.getName()</td>
         <td>$app.getState()</td>
         <td>$app.getCpuPerSecond()</td>
-        <td>$watchdog.getPenalty($app)</td>
         <td><a href="start?name=$app.getId()">Start</a></td>
         <td><a href="stop?name=$app.getId()">Stop</a></td></tr>
     #end

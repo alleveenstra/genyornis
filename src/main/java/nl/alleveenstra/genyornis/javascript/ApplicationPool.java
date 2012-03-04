@@ -1,7 +1,9 @@
 package nl.alleveenstra.genyornis.javascript;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,19 +18,14 @@ import nl.alleveenstra.genyornis.ServerContext;
 public class ApplicationPool {
     private static final Logger log = LoggerFactory.getLogger(ApplicationPool.class);
 
-    private static final String SCRIPTFOLDER = "/javascripts";
-    private static final String USER_DIR = "user.dir";
     private static ApplicationPool instance;
 
     private Map<String, Application> apps;
-    private WatchDog watchDog;
     private ServerContext context;
 
     private ApplicationPool(ServerContext context) {
         this.context = context;
         apps = new HashMap<String, Application>();
-        watchDog = new WatchDog(this);
-        watchDog.start();
     }
 
     public static ApplicationPool getInstance(ServerContext context) {
@@ -36,10 +33,6 @@ public class ApplicationPool {
             instance = new ApplicationPool(context);
         }
         return instance;
-    }
-
-    public WatchDog getWatchDog() {
-        return watchDog;
     }
 
     public void start(String appname) {
@@ -58,15 +51,6 @@ public class ApplicationPool {
 
     public Collection<Application> list() {
         return apps.values();
-    }
-
-    public long getCPUTime(String applicationName) {
-        if (apps.containsKey(applicationName)) {
-            Application application = apps.get(applicationName);
-            application.updateCpuUsage();
-            return application.getCpuPerSecond();
-        }
-        return -1;
     }
 
     public void deployDirectory(String dirname) {

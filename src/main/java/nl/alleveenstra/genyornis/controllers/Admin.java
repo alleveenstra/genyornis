@@ -14,9 +14,9 @@ import nl.alleveenstra.genyornis.sessions.Session;
 
 /**
  * This class handles the admin interface.
- * 
+ * <p/>
  * It is not ready yet.
- * 
+ *
  * @author alle.veenstra@gmail.com
  */
 @Controller(prefix = "/admin/")
@@ -24,22 +24,24 @@ public class Admin {
     private static final Logger log = LoggerFactory.getLogger(Admin.class);
 
     @Action(regex = ".*")
-	public void handle(ServerContext context, HttpRequest request, HttpResponse response) {
+    public void handle(ServerContext context, HttpRequest request, HttpResponse response) {
         VelocityTemplate template = new VelocityTemplate("templates/admin.wm");
 
         Integer requestCounter = new Integer(0);
-        if (request.getSession() != null)
+        if (request.getSession() != null) {
             requestCounter = request.getSession().getValue(Session.TYPES.REQUEST_COUNTER);
-        if (requestCounter == null)
+        }
+        if (requestCounter == null) {
             requestCounter = new Integer(0);
+        }
         requestCounter++;
-        if (request.getSession() != null)
+        if (request.getSession() != null) {
             request.getSession().setValues(Session.TYPES.REQUEST_COUNTER, requestCounter);
+        }
 
         template.put("title", "Genyornis administration");
         template.put("requestCounter", requestCounter);
-		template.put("apps", context.applications().list());
-        template.put("watchdog", context.applications().getWatchDog());
-		template.render(response);
-	}
+        template.put("apps", context.applications().list());
+        template.render(response);
+    }
 }

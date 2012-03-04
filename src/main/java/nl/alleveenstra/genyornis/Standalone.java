@@ -12,7 +12,7 @@ import nl.alleveenstra.genyornis.fields.WebappDirectory;
 /**
  * @author alle.veenstra@gmail.com.
  */
-public class Standalone extends AbstractModule{
+public class Standalone extends AbstractModule {
 
     @Override
     protected void configure() {
