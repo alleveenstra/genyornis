@@ -20,13 +20,11 @@ import nl.alleveenstra.genyornis.routing.Controller;
  */
 @Controller(prefix = "/static/")
 public class Static {
-
     private static final String INVALID_PATH_MESSAGE = "false";
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String READ_ERROR = "Error reading file";
     private static final String SERVE_FROM = "/static";
     private static final String PREFIX = "/static/";
-
 
     @Action(regex = ".*")
     public void handle(ServerContext context, HttpRequest request, HttpResponse response) {

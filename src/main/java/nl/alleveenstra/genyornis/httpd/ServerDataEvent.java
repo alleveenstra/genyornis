@@ -7,13 +7,25 @@ import org.slf4j.LoggerFactory;
 
 class ServerDataEvent {
     private static final Logger log = LoggerFactory.getLogger(ServerDataEvent.class);
-    public NioServer server;
-    public SocketChannel socket;
-    public char[] data;
+    private NioServer server;
+    private SocketChannel socket;
+    private byte[] data;
 
-    public ServerDataEvent(NioServer server, SocketChannel socket, char[] data) {
+    public ServerDataEvent(NioServer server, SocketChannel socket, byte[] data) {
         this.server = server;
         this.socket = socket;
         this.data = data;
+    }
+
+    public NioServer getServer() {
+        return server;
+    }
+
+    public SocketChannel getSocket() {
+        return socket;
+    }
+
+    public byte[] getData() {
+        return data;
     }
 }

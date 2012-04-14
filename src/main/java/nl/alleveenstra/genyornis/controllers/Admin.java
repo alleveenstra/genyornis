@@ -11,7 +11,6 @@ import nl.alleveenstra.genyornis.routing.Controller;
 import nl.alleveenstra.genyornis.routing.VelocityTemplate;
 import nl.alleveenstra.genyornis.sessions.Session;
 
-
 /**
  * This class handles the admin interface.
  * <p/>

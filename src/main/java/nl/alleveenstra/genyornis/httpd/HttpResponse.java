@@ -10,11 +10,12 @@ import org.slf4j.LoggerFactory;
 
 public class HttpResponse {
     private static final Logger log = LoggerFactory.getLogger(HttpResponse.class);
-    private static final String DEFAULT_MESSAGE = "qp<sup>2</sup> HTTPd";
+    private static final String DEFAULT_MESSAGE = "<h1>Welcome to Genyornis</h1>";
 
     boolean canSend = true;
     byte[] content;
     private Map<String, String> headers = new HashMap<String, String>();
+    private int status = 200;
 
     private HttpResponse() {
         content = DEFAULT_MESSAGE.getBytes();
@@ -29,12 +30,21 @@ public class HttpResponse {
     }
 
     public void setContent(byte[] content) {
-        this.content = content;
+        if (content == null) {
+            this.content = new byte[0];
+        } else {
+            this.content = content;
+        }
     }
 
     public byte[] render() {
-        String headers = "HTTP/1.0 200 OK\r\n";
-        headers += "Content-Length: " + content.length + "\r\n";
+        String headers;
+        if (status == 101) {
+            headers = "HTTP/1.1 101 Switching Protocols\r\n";
+        } else {
+            headers = "HTTP/1.0 200 OK\r\n";
+            headers += "Content-Length: " + content.length + "\r\n";
+        }
         Iterator<Entry<String, String>> i = this.headers.entrySet().iterator();
         while (i.hasNext()) {
             Entry<String, String> entry = i.next();
@@ -61,5 +71,9 @@ public class HttpResponse {
 
     public void setSend(boolean value) {
         canSend = value;
+    }
+
+    public void setStatus(final int status) {
+        this.status = status;
     }
 }

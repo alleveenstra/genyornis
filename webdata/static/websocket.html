@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <link rel="stylesheet" href="/static/css/site.css" type="text/css"/>
+    <script src="/static/js/prototype.js" type="text/javascript"></script>
+    <script src="/static/js/site.js" type="text/javascript"></script>
+    <title>Genyornis demo</title>
+</head>
+<body>
+
+<div id="content">empty</div>
+
+<br/>
+
+<input type="text" id="message"/>
+
+<button id="button">send</button>
+
+<script>
+    var socket = new WebSocket('ws://127.0.1.1:8080/channel/chat');
+
+    socket.onerror = function (event) {
+        alert('Socket is error! ' + event.data);
+    };
+
+    socket.onmessage = function (event) {
+        alert('Received a message!');
+        $('content').innerHTML = event.data;
+    };
+
+    $('button').on('click', function (e) {
+        socket.send($('message').getValue());
+    });
+</script>
+</body>
+</html>

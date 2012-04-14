@@ -1,17 +1,15 @@
 package nl.alleveenstra.genyornis.httpd;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.channels.spi.SelectorProvider;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,11 +17,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.alleveenstra.genyornis.ServerContext;
 import nl.alleveenstra.genyornis.channels.SocketHook;
+import static nl.alleveenstra.genyornis.httpd.SocketState.HTTP;
 
 public class NioServer implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(NioServer.class);
@@ -47,8 +47,11 @@ public class NioServer implements Runnable {
     private List<ChangeRequest> pendingChanges = new LinkedList<ChangeRequest>();
 
     // Maps a SocketChannel to a list of ByteBuffer instances
+    private static final SocketState DEFAULT_SOCKET_STATE = HTTP;
+    private Map<SocketChannel, SocketState> socketStateMap = new HashMap<SocketChannel, SocketState>();
     private Map<SocketChannel, List<ByteBuffer>> pendingData = new HashMap<SocketChannel, List<ByteBuffer>>();
     private ServerContext context;
+    private Map<SocketChannel, String> websocketUri = new HashMap<SocketChannel, String>();
 
     public NioServer(ServerContext context, InetAddress hostAddress, int port, HttpWorker worker) {
         this.hostAddress = hostAddress;
@@ -83,6 +86,25 @@ public class NioServer implements Runnable {
         this.selector.wakeup();
     }
 
+    public SocketState getSocketState(final SocketChannel socket) {
+        if (!socketStateMap.containsKey(socket)) {
+            socketStateMap.put(socket, DEFAULT_SOCKET_STATE);
+        }
+        return socketStateMap.get(socket);
+    }
+
+    public void setSocketState(final SocketChannel socket, SocketState state) {
+        socketStateMap.put(socket, state);
+    }
+
+    public void setWebsocketURI(final SocketChannel socket, String uri) {
+        websocketUri.put(socket, uri);
+    }
+
+    public String getWebsocketURI(final SocketChannel socket) {
+        return websocketUri.get(socket);
+    }
+
     public void run() {
         while (true) {
             try {
@@ -106,7 +128,7 @@ public class NioServer implements Runnable {
                 // Iterate over the set of keys for which events are available
                 Iterator<SelectionKey> selectedKeys = this.selector.selectedKeys().iterator();
                 while (selectedKeys.hasNext()) {
-                    SelectionKey key = (SelectionKey) selectedKeys.next();
+                    SelectionKey key = selectedKeys.next();
                     selectedKeys.remove();
 
                     if (!key.isValid()) {
@@ -122,6 +144,8 @@ public class NioServer implements Runnable {
                         this.write(key);
                     }
                 }
+
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -134,6 +158,7 @@ public class NioServer implements Runnable {
 
         // Accept the connection and make it non-blocking
         SocketChannel socketChannel = serverSocketChannel.accept();
+
         // Socket socket = socketChannel.socket();
         socketChannel.configureBlocking(false);
 
@@ -170,13 +195,12 @@ public class NioServer implements Runnable {
         }
 
         //
-        Charset charset = Charset.forName("UTF-8");
-        CharsetDecoder decoder = charset.newDecoder();
         readBuffer.flip();
-        CharBuffer chars = decoder.decode(readBuffer);
+        byte[] data = new byte[readBuffer.limit()];
+        readBuffer.get(data);
 
         // Hand the data off to our worker thread
-        this.worker.processData(this, socketChannel, chars.array(), numRead);
+        this.worker.processData(this, socketChannel, data, numRead);
     }
 
     private void write(SelectionKey key) throws IOException {
@@ -187,7 +211,7 @@ public class NioServer implements Runnable {
 
             // Write until there's not more data ...
             while (!queue.isEmpty()) {
-                ByteBuffer buf = (ByteBuffer) queue.get(0);
+                ByteBuffer buf = queue.get(0);
                 socketChannel.write(buf);
                 if (buf.remaining() > 0) {
                     // ... or the socket's buffer fills up
@@ -222,5 +246,15 @@ public class NioServer implements Runnable {
         serverChannel.register(socketSelector, SelectionKey.OP_ACCEPT);
 
         return socketSelector;
+    }
+
+    public void sendWebSocket(final SocketChannel socket, final String data) {
+        try {
+            final byte[] frame = FrameReader.createTextFrame(data.getBytes("UTF-8"));
+            log.info("Sending " + new String(Hex.encodeHex(frame)));
+            send(socket, frame);
+        } catch (UnsupportedEncodingException e) {
+            log.error("Unsupported encoding exception", e);
+        }
     }
 }

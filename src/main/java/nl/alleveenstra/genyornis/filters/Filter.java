@@ -7,6 +7,6 @@ import nl.alleveenstra.genyornis.httpd.HttpResponse;
 /**
  * @author alle.veenstra@gmail.com
  */
-public abstract class Filter {
-    public abstract void process(Chain chain, ServerContext context, HttpRequest request, HttpResponse response);
+public interface Filter {
+    void process(Chain chain, ServerContext context, HttpRequest request, HttpResponse response);
 }

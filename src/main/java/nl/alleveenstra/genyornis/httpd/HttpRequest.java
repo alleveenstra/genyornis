@@ -1,6 +1,7 @@
 package nl.alleveenstra.genyornis.httpd;
 
 import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -26,9 +27,9 @@ public class HttpRequest {
 
         HttpRequest request = new HttpRequest();
 
-        request.socket = dataEvent.socket;
+        request.socket = dataEvent.getSocket();
 
-        StringTokenizer in = new StringTokenizer(new String(dataEvent.data), "\r\n");
+        StringTokenizer in = new StringTokenizer(new String(dataEvent.getData(), Charset.forName("UTF-8")), "\r\n");
 
         // Read the request line
         String inLine = in.nextToken();
@@ -92,7 +93,7 @@ public class HttpRequest {
 
     private static String decodePercent(String str) {
         try {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             for (int i = 0; i < str.length(); i++) {
                 char c = str.charAt(i);
                 switch (c) {
@@ -100,8 +101,7 @@ public class HttpRequest {
                         sb.append(' ');
                         break;
                     case '%':
-                        sb.append((char) Integer.parseInt(str.substring(i + 1,
-                                i + 3), 16));
+                        sb.append((char) Integer.parseInt(str.substring(i + 1, i + 3), 16));
                         i += 2;
                         break;
                     default:

@@ -1,5 +1,7 @@
 package nl.alleveenstra.genyornis.controllers;
 
+import java.nio.channels.SocketChannel;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,6 +10,7 @@ import nl.alleveenstra.genyornis.httpd.HttpRequest;
 import nl.alleveenstra.genyornis.httpd.HttpResponse;
 import nl.alleveenstra.genyornis.routing.Action;
 import nl.alleveenstra.genyornis.routing.Controller;
+import nl.alleveenstra.genyornis.routing.Websocket;
 
 /**
  * The channel handler class is responsible for handling messaging between users and applications.
@@ -21,6 +24,12 @@ public class Channel {
     private static final String MESSAGE = "msg";
     private static final String NAME = "name";
 
+    @Action(regex = "chat")
+    @Websocket
+    public void handle_chat(ServerContext context, SocketChannel socket, String data) {
+        context.server().sendWebSocket(socket, data);
+    }
+
     /**
      * Handle a message send request. Send a message to a specific channel.
      *
@@ -31,7 +40,7 @@ public class Channel {
     @Action(regex = "message")
     public void handle_message(ServerContext context, HttpRequest request, HttpResponse response) {
         if (request.getParameters().containsKey(NAME) && request.getParameters().containsKey(MESSAGE)) {
-            context.channelManager().send((String) request.getParameters().get(NAME), (String) request.getParameters().get(MESSAGE));
+            context.channelManager().send(request.getParameters().get(NAME), request.getParameters().get(MESSAGE));
         }
     }
 

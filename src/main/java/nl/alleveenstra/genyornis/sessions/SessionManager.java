@@ -19,7 +19,7 @@ import nl.alleveenstra.genyornis.httpd.HttpResponse;
 /**
  * @author alle.veenstra@gmail.com
  */
-public class SessionManager extends Filter {
+public class SessionManager implements Filter {
     private static final Logger log = LoggerFactory.getLogger(SessionManager.class);
 
     private static SessionManager instance;
@@ -36,7 +36,6 @@ public class SessionManager extends Filter {
         return instance;
     }
 
-    @Override
     public void process(Chain chain, ServerContext context, HttpRequest request, HttpResponse response) {
         Map<String, String> headers = request.getHeaders();
         String cookie = null;
